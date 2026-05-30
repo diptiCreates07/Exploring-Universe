@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>MY UNIVERSE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+
+<body>
+    <div class="hero">
+        <h1 class="title">WELCOME TO MY UNIVERSE</h1>
+        <p class="subtitle">
+            Explore planets, stars, and hidden coding worlds
+        </p>
+        <a href="planet.html">
+            <button class="btn">ENTER THE UNIVERSE</button>
+        </a>
+    </div>
+
+    <canvas id="dust"></canvas>
+
+<script>
+
+const canvas = document.getElementById("dust");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let particles = [];
+
+// create dust continuously
+function createDust(){
+
+    const colors = ["#b56cff", "#ff4fd8", "#ff6ec7", "#7aa2ff", "#ffffff", "#8a2be2", "#d18fff" , "c0c0c0"];
+
+    particles.push({
+        brightness: Math.random() * 0.5 + 0.5,
+        pulseSpeed: Math.random() * 0.02 + 0.005,
+
+        x: Math.random() * canvas.width,
+        y: -9,
+
+        size: Math.random() * 1.2 + 0.3,   // 🔬 micro particles
+
+        speed: Math.random() * 0.8 + 1.2,
+
+        color: colors[Math.floor(Math.random() * colors.length)],
+
+        alpha: Math.random() * 0.6 + 0.2
+
+        
+
+    });
+
+}
+
+function animate(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    // purple glow
+    for(let i=0;i<particles.length;i++){
+
+        let p = particles[i];
+        p.brightness += p.pulseSpeed;
+
+        if(p.brightness > 1 || p.brightness < 0.4){
+        p.pulseSpeed *= -1;
+}
+
+        p.y += p.speed;
+
+        ctx.beginPath();
+ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+ctx.fillStyle = p.color;
+
+ctx.shadowBlur = p.glow * p.brightness;
+ctx.shadowColor = p.color;
+
+ctx.globalAlpha = p.alpha * p.brightness;
+
+ctx.fill();
+
+ctx.globalAlpha = 1;
+
+        // remove if out of screen
+        if(p.y < -10){
+            particles.splice(i,1);
+            i--;
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+// keep generating dust
+setInterval(createDust, 50);
+
+animate();
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+</script>
+
+</body>
